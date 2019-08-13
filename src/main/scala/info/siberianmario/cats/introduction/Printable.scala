@@ -1,7 +1,6 @@
-package info.siberianmario.cats
+package info.siberianmario.cats.introduction
 
-import info.siberianmario.cats.PrintableInstances._
-import info.siberianmario.cats.PrintableSyntax._
+import info.siberianmario.cats.introduction.PrintableSyntax._
 
 trait Printable[A] {
   def format(a: A): String
@@ -23,17 +22,6 @@ object PrintableSyntax {
     def format(implicit p: Printable[A]): String = p.format(value)
 
     def print(implicit p: Printable[A]): Unit = println(p.format(value))
-  }
-}
-
-final case class Cat(name: String, age: Int, color: String)
-
-object Cat {
-  implicit val printableCat: Printable[Cat] = (cat: Cat) => {
-    val name = Printable.format(cat.name)
-    val age = Printable.format(cat.age)
-    val color = Printable.format(cat.color)
-    s"$name is a $age year-old $color cat"
   }
 }
 
