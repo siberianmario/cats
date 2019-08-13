@@ -1,8 +1,9 @@
 package info.siberianmario.cats.introduction
 
 import info.siberianmario.cats.introduction.PrintableSyntax._
+import info.siberianmario.cats.introduction.PrintableInstances._
 
-trait Printable[A] {
+trait Printable[-A] {
   def format(a: A): String
 }
 
@@ -15,6 +16,12 @@ object Printable {
 object PrintableInstances {
   implicit val printableInt: Printable[Int] = (i: Int) => i.toString
   implicit val printableString: Printable[String] = (str: String) => str
+  implicit def printableOption[T](implicit p: Printable[T]): Printable[Option[T]] = new Printable[Option[T]] {
+    override def format(option: Option[T]): String = option match {
+      case Some(value) => p.format(value)
+      case None => "empty Option"
+    }
+  }
 }
 
 object PrintableSyntax {
@@ -27,6 +34,7 @@ object PrintableSyntax {
 
 object PrintableApp extends App {
   val pussy = Cat("Tom", 6, "black")
-  Printable.print(pussy)
   pussy.print
+  Option(pussy).print
+  Some(pussy).print
 }
