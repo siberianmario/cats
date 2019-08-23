@@ -8,10 +8,11 @@ trait MySemigroup[A] {
 }
 
 object MySemigroup {
-  def associativeLaw[A](x: A, y: A, z: A)
-    (implicit s: MySemigroup[A]): Boolean = {
-    s.combine(x, s.combine(y, z)) ==
-      s.combine(s.combine(x, y), z)
+  def apply[A: MySemigroup]: MySemigroup[A] = implicitly[MySemigroup[A]]
+
+  def associativeLaw[A: MySemigroup](x: A, y: A, z: A): Boolean = {
+    MySemigroup[A].combine(x, MySemigroup[A].combine(y, z)) ==
+        MySemigroup[A].combine(MySemigroup[A].combine(x, y), z)
   }
 }
 
@@ -20,13 +21,11 @@ trait MyMonoid[A] extends MySemigroup[A] {
 }
 
 object MyMonoid {
-  def apply[A](implicit monoid: MyMonoid[A]) =
-    monoid
+  def apply[A: MyMonoid]: MyMonoid[A] = implicitly[MyMonoid[A]]
 
-  def identityLaw[A](x: A)
-    (implicit m: MyMonoid[A]): Boolean = {
-    (m.combine(x, m.empty) == x) &&
-      (m.combine(m.empty, x) == x)
+  def identityLaw[A: MyMonoid](x: A): Boolean = {
+    (MyMonoid[A].combine(x, MyMonoid[A].empty) == x) &&
+        (MyMonoid[A].combine(MyMonoid[A].empty, x) == x)
   }
 }
 
@@ -81,10 +80,10 @@ object MonoidApp extends App {
   } yield (x, y, z)
 
   def testIdentityLaw[T](values: Seq[T])(implicit m: MyMonoid[T]): Boolean =
-  values.forall(MyMonoid.identityLaw(_)(m))
+    values.forall(MyMonoid.identityLaw(_)(m))
 
   def testAssociativeLaw[T](values: Seq[(T, T, T)])(implicit m: MySemigroup[T]): Boolean =
-  values.forall(v => MySemigroup.associativeLaw(v._1, v._2, v._3)(m))
+    values.forall(v => MySemigroup.associativeLaw(v._1, v._2, v._3)(m))
 
   val boolValues = Seq(false, true)
   val boolCombinations = getCombinations3(boolValues)
