@@ -1,4 +1,4 @@
-name := "cats"
+name := "scala-with-cats"
 
 version := "0.1"
 
