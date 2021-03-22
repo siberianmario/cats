@@ -1,4 +1,4 @@
-name := "cats"
+name := "scala-with-cats"
 
 version := "0.1"
 
@@ -10,3 +10,5 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings",
   "-Ypartial-unification"
 )
+
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
