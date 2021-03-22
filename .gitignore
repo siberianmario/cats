@@ -38,3 +38,16 @@
 
 # for local run
 /_runtime
+
+# VS Code
+.vscode
+
+# Metals
+.metals
+**/metals.sbt
+
+# Bloop
+.bloop
+
+# Ammonite
+.ammonite
