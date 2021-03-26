@@ -2,13 +2,12 @@ name := "scala-with-cats"
 
 version := "0.1"
 
-scalaVersion := "2.12.13"
+scalaVersion := "2.13.5"
 
 libraryDependencies +=
-  "org.typelevel" %% "cats-core" % "1.0.0"
+  "org.typelevel" %% "cats-core" % "2.4.0"
 scalacOptions ++= Seq(
-  "-Xfatal-warnings",
-  "-Ypartial-unification"
+  "-Xfatal-warnings"
 )
 
-addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.3" cross CrossVersion.full)

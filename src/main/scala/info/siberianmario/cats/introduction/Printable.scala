@@ -1,34 +1,36 @@
 package info.siberianmario.cats.introduction
 
-import info.siberianmario.cats.introduction.PrintableSyntax._
 import info.siberianmario.cats.introduction.PrintableInstances._
+import info.siberianmario.cats.introduction.PrintableSyntax._
 
 trait Printable[-A] {
   def format(a: A): String
 }
 
 object Printable {
-  def format[A](a: A)(implicit p: Printable[A]): String = p.format(a)
+  def apply[A: Printable]: Printable[A] = implicitly[Printable[A]]
+  
+  def format[A: Printable](a: A): String = Printable[A].format(a)
 
-  def print[A](a: A)(implicit p: Printable[A]): Unit = println(format(a))
+  def print[A: Printable](a: A): Unit = println(format(a))
 }
 
 object PrintableInstances {
   implicit val printableInt: Printable[Int] = (i: Int) => i.toString
   implicit val printableString: Printable[String] = (str: String) => str
-  implicit def printableOption[T](implicit p: Printable[T]): Printable[Option[T]] = new Printable[Option[T]] {
+  implicit def printableOption[T: Printable]: Printable[Option[T]] = new Printable[Option[T]] {
     override def format(option: Option[T]): String = option match {
-      case Some(value) => p.format(value)
+      case Some(value) => Printable[T].format(value)
       case None => "empty Option"
     }
   }
 }
 
 object PrintableSyntax {
-  implicit class PrintableOps[A](value: A) {
-    def format(implicit p: Printable[A]): String = p.format(value)
+  implicit class PrintableOps[A: Printable](value: A) {
+    def format: String = Printable.format(value)
 
-    def print(implicit p: Printable[A]): Unit = println(p.format(value))
+    def print: Unit = Printable.print(value)
   }
 }
 
